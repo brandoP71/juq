@@ -31,7 +31,7 @@ app.post('/uploadSong', function(req,res) {
   res.end();
 });
 
-app.listen(app.get('port'), function (err) {
+app.listen(process.env.PORT || 8000, function (err) {
   if (err) {
     console.log(err)
   }
