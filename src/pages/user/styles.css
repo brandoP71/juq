@@ -1,0 +1,84 @@
+.page {
+	width: 99%;
+	height: 99%;
+}
+
+.formContainer {
+	width: 20%;
+	top: 5%;
+	left: 100px;
+	position: absolute;
+}
+
+.youtubeFormContainer {
+	position: absolute;
+	width: 20%;
+	top: 5%;
+	left: 500px;
+}
+
+.jukeboxContainer {
+	position: relative;
+	left: 100px;
+}
+
+.jukeboxContainer label {
+	padding-right: 10px;
+}
+	
+.jukeboxHeader {
+	font-size: 50px;
+	color: red;
+}
+
+.songlistContainer {
+	width: 20%;
+	top: 5%;
+	right: 0px;
+	position: absolute;
+	text-align: center;
+}
+
+.playlistContainer {
+	width: 20%;
+	top: 5%;
+	right: 300px;
+	position: absolute;
+	text-align: center;
+}
+
+.songlist {
+
+	ol {
+		width:80%;
+		margin: 0 auto;
+		li {
+			border: 1px solid black;
+			font-size: 16px;
+			margin: 0 0 3px 0;
+		}
+		li:hover {
+			background-color: red;
+			opacity: 0.9;
+			color: black;
+		}
+	}
+}
+
+.controlButtons {
+	margin: 0 auto;
+	width: 60%;
+	ul {
+		padding: 0;
+	}
+
+	li {
+		display: inline;
+	}
+
+	button {
+		padding: 4px;
+		margin-right: 3px;
+		margin-left: 3px;
+	}
+}

@@ -1,0 +1,45 @@
+.mediaplayer {
+  video,
+  iframe {
+    display: block;
+    margin: 0 auto;
+  }
+  
+  // hide native controls
+  video::-webkit-media-controls {
+    display: none !important;
+  }
+}
+
+.mediacontrols {
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  width: 60%;
+  
+  // push controls above fullscreen video
+  position: relative;
+  z-index: 2147483647;
+  
+  // space children
+  * + * {
+    margin-left: 12px;
+  }
+}
+
+.mediacontrols input[type="range"] {
+  width: 200px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.mediacontrols time {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+// Pen Specific
+body {
+  padding: 30px;
+  margin: 0;
+}
