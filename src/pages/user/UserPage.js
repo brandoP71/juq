@@ -108,7 +108,7 @@ class UserPage extends Component {
 
       var ytApiKey = "AIzaSyB5zz7R6AudAf5yxZK05WZhn7sZCiL4Esk";
 
-      $.get("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=" + urlTitle + "%2B" + urlArtist + "%2Baudio%2BOFFICIAL&type=video&videoCategoryId=10&key=" + ytApiKey, function(data) {
+      $.get("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=audio%2Blyrics%2Bofficial%2B" + urlTitle + "%2B" + urlArtist + "&type=video&videoCategoryId=10&key=" + ytApiKey, function(data) {
         videoID = data.items[0].id.videoId;
 
         url = "https://www.youtube.com/watch?v=" + videoID;
@@ -179,21 +179,27 @@ class UserPage extends Component {
     var song = this.state.selectedSong;
     var found = false;
 
-    for(var i = 0; i < this.state.playlist.length; i++) {
-      if (this.state.playlist[i].id == song.id) {
-          found = true;
-          alert("This song is already in the Playlist.");
-          break;
+    if (song != null) {
+
+      for(var i = 0; i < this.state.playlist.length; i++) {
+        if (this.state.playlist[i].id == song.id) {
+            found = true;
+            alert("This song is already in the Playlist.");
+            break;
+        }
+      }
+
+      if (!found) {
+        this.state.playlist.push(song);
+        playlistRef.set(this.state.playlist);
+
+        this.setState({
+          playlist: this.state.playlist
+        });
       }
     }
-
-    if (!found) {
-      this.state.playlist.push(song);
-      playlistRef.set(this.state.playlist);
-
-      this.setState({
-        playlist: this.state.playlist
-      });
+    else {
+      alert("Please select a song from the Songlist");
     }
   }
   

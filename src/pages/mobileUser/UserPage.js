@@ -93,6 +93,38 @@ class UserPage extends Component {
 
       return false;
     });
+
+    // YT FORM SUBMIT
+    $("#YTForm").submit(function(e)
+    {
+      var artist = thisComponent.refs.YTArtistInput.value;
+      var title = thisComponent.refs.YTTitleInput.value;
+      var id = Date.now();
+      var url;
+      var videoID;
+
+      var urlTitle = title.replace(/ /g, '+');
+      var urlArtist = artist.replace(/ /g, '+');
+
+      var ytApiKey = "AIzaSyB5zz7R6AudAf5yxZK05WZhn7sZCiL4Esk";
+
+      $.get("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=audio%2Blyrics%2Bofficial%2B" + urlTitle + "%2B" + urlArtist + "&type=video&videoCategoryId=10&key=" + ytApiKey, function(data) {
+        videoID = data.items[0].id.videoId;
+
+        url = "https://www.youtube.com/watch?v=" + videoID;
+
+
+        var songObject = { id: id, title: title, artist: artist, filename: 'url_source', url: url };
+
+        thisComponent.state.songlist.push(songObject);
+
+        songlistRef.set(thisComponent.state.songlist);
+
+        $('#YTForm')[0].reset();
+
+      });
+      return false;
+    });
   }
 
   componentDidUpdate() {
@@ -133,21 +165,24 @@ class UserPage extends Component {
     var song = this.state.selectedSong;
     var found = false;
 
-    for(var i = 0; i < this.state.playlist.length; i++) {
-      if (this.state.playlist[i].id == song.id) {
-          found = true;
-          alert("This song is already in the Playlist.");
-          break;
+    if (song != null) {
+
+      for(var i = 0; i < this.state.playlist.length; i++) {
+        if (this.state.playlist[i].id == song.id) {
+            found = true;
+            alert("This song is already in the Playlist.");
+            break;
+        }
       }
-    }
 
-    if (!found) {
-      this.state.playlist.push(song);
-      playlistRef.set(this.state.playlist);
+      if (!found) {
+        this.state.playlist.push(song);
+        playlistRef.set(this.state.playlist);
 
-      this.setState({
-        playlist: this.state.playlist
-      });
+        this.setState({
+          playlist: this.state.playlist
+        });
+      }
     }
   }
   
@@ -156,9 +191,14 @@ class UserPage extends Component {
       <div className={styles.page}>
 
         <div className={styles.formContainer}>
-          <form id="sourceForm" encType="multipart/form-data" method="post">
-            <label htmlFor="srcInput">Source (YouTube URL):</label>
-            <input type="text" ref="srcInput" name="srcInputt" />
+          <form id="YTForm">
+            <label htmlFor="YTTitleInput">Title(Required):</label>
+            <input type="text" ref="YTTitleInput" name="YTTitleInput" required/>
+            <br />
+
+            <label htmlFor="YTArtistInput">Artist(Required):</label>
+            <input type="text"  ref="YTArtistInput" name="YTArtistInput" required/>
+
             <input type="submit" value="Submit" />
           </form>
         </div>
