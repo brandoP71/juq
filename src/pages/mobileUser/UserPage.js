@@ -108,7 +108,7 @@ class UserPage extends Component {
 
       var ytApiKey = "AIzaSyB5zz7R6AudAf5yxZK05WZhn7sZCiL4Esk";
 
-      $.get("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&order=rating&q=audio%2Blyrics%2Bofficial%2B" + urlTitle + "%2B" + urlArtist + "&type=video&videoCategoryId=10&key=" + ytApiKey, function(data) {
+      $.get("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&order=viewCount&q=audio%2Blyrics%2Bofficial%2B" + urlTitle + "%2B" + urlArtist + "&type=video&videoCategoryId=10&key=" + ytApiKey, function(data) {
         videoID = data.items[0].id.videoId;
 
         url = "https://www.youtube.com/watch?v=" + videoID;
