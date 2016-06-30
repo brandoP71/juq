@@ -40,7 +40,10 @@ export default class Jukebox extends Component {
           thisComponent.load(thisComponent.state.playlist[0].url);
         }
         else if (thisComponent.state.playlist.length === 0) {
-          thisComponent.load(null);
+          thisComponent.state.url = null;
+          thisComponent.setState({
+            url: thisComponent.state.url
+          });
         }
       } 
     }, function (errorObject) {
