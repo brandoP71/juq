@@ -61,6 +61,10 @@ module.exports = _.extend({}, config, {
         test: /\.json?$/,
         loader: 'json'
       },
+      {
+        test: /\.scss$/,
+        loaders: ["style", "css", "sass"]
+      },
       { test: /\.svg/,
         loader: 'url?limit=' + embedFileSize + '&mimetype=image/svg+xml'
       },

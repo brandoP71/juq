@@ -41,6 +41,10 @@ module.exports = {
         loader: 'json'
       },
       {
+        test: /\.scss$/,
+        loaders: ["style", "css", "sass"]
+      },
+      {
         test: /\.css$/,
         loader: 'style-loader!css-loader?modules&&importLoaders=1&localIdentName=[name]---[local]---[hash:base64:5]!postcss-loader'
       },

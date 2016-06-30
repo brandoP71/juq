@@ -184,12 +184,6 @@ class App extends React.Component {
 	      	this.setState({
 	      		playlist: this.state.playlist
 	      	});
-	      	if (this.state.playlist.length === 1) {
-	      		this.state.currentSource = songSrc;
-	      	}
-	      	this.setState({
-	      		currentSource: this.state.currentSource
-	      	});
       }
 	}
 
@@ -215,11 +209,6 @@ class App extends React.Component {
       		else {
       			songSrc = require('../../../assets/' + newSong.filename.replace(/\.[^/.]+$/, "") + '.mp3');
       		}
-
-      		this.state.currentSource = songSrc;
-      		this.setState({
-      			currentSource: this.state.currentSource
-      		});
       	}
       	else {
       		this.state.currentSource = null;
@@ -247,21 +236,24 @@ class App extends React.Component {
 	}
 
 	render() {
-		const jukebox = 
-			(this.state.playlist.length > 0 && this.state.currentSource != null) ? 
-			<Jukebox
+		//const jukebox = 
+			//(this.state.playlist.length > 0 && this.state.currentSource != null) ? 
+			{/*<Jukebox
 			src={this.state.currentSource}
 			playlist={this.state.playlist}
 			removeFromPlaylist={this.removeFromPlaylist.bind(this)}
 			jukeboxID={this.props.params.jukeboxID}
-			/> : 
-			<h1>The playlist is curently empty!</h1>;
+			/> //: */}
+			//<h1>The playlist is curently empty!</h1>;
 		return  (
 			<div className={styles.page}>
 				<div className={styles.jukeboxContainer}>
 					<h1 className={styles.jukeboxHeader}>Welcome to the React powered Jukebox.</h1>
-					{jukebox}
-					<br />
+					<Jukebox
+						removeFromPlaylist={this.removeFromPlaylist.bind(this)}
+						jukeboxID={this.props.params.jukeboxID}
+					/> 
+					{/*<br />
 					<br />
 					<p>Upload a Song!</p>
 					<form id="songForm" encType="multipart/form-data" method="post">
@@ -279,7 +271,7 @@ class App extends React.Component {
 				       	<input type="submit" value="Submit" />
 				    </form>
 				    <br />
-					<br />
+					<br />*/}
 				    <button onClick={this.exitJukebox.bind(this)}>EXIT JUKEBOX</button>
 				</div>
 				<Songlist jukeboxID={this.props.params.jukeboxID} songs={this.state.songlist} addToPlaylist={this.addToPlaylist.bind(this)} removeSong={this.removeSong.bind(this)}/>

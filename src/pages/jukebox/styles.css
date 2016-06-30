@@ -3,19 +3,12 @@
 	height: 99%;
 }
 
-.jukeboxContainer {
+.ytContainer {
 	position: absolute;
-	left: 50px;
+	left: 200px;
 }
 
-.jukeboxContainer iframe{
-	width: 50%;
-	height: 300px;
-	position: relative;
-	left: -20%;
-}
-
-.jukeboxContainer label {
+.ytContainer label {
 	padding-right: 10px;
 }
 	
@@ -41,7 +34,9 @@
 }
 
 .songlist {
-
+	overflow: hidden;
+	overflow-y: scroll;
+	height: 600px;
 	ol {
 		width:80%;
 		margin: 0 auto;

@@ -1,94 +1,89 @@
 import React, { Component } from 'react';
-import { withMediaPlayer, withMediaProps, controls } from 'react-media-player';
-const { PlayPause, CurrentTime, Progress, SeekBar, Duration, MuteUnmute, Volume, Fullscreen } = controls;
-import styles from './jukeboxstyles.css';
+import styles from './styles.css';
+import ReactPlayer from 'react-player';
+
+import './defaults.scss';
+import './App.scss';
+import './Range.scss';
 
 // Firebase
 //var Rebase = require('re-base');
 //var base = Rebase.createClass('https://catchoftheday-tutorial.firebaseio.com/');
 
-class Jukebox extends Component {
+export default class Jukebox extends Component {
   constructor() {
     super();
 
     this.state = {
-      onFirstSongStill: true
+      url: null,
+      playlist: []
     }
+  }
+  load(url) {
+    this.setState({
+      url
+    })
   }
 
   componentDidMount() {
-    try {
-      this.props.media.play();
-    }catch(e) {
-      var nothing = 'nothing';
-    }
+    var thisComponent = this;
+
+    var playlistRef = new Firebase(
+      "https://jukebox-app-e8c39.firebaseio.com/" + this.props.jukeboxID + "/playlist/"
+    );
+
+    // HANDLE PLAYLIST INIT
+    playlistRef.on("value", function(snapshot) {
+      if (snapshot.val() != null) {
+        thisComponent.state.playlist = snapshot.val();
+        if (thisComponent.state.playlist.length === 1) {
+          thisComponent.load(thisComponent.state.playlist[0].url);
+        }
+        else if (thisComponent.state.playlist.length === 0) {
+          thisComponent.load(null);
+        }
+      } 
+    }, function (errorObject) {
+      console.log("The read failed: " + errorObject.code);
+    });
   }
 
   componentDidUpdate() {
-    if(this.props.media.currentTime > (this.props.media.duration - 4) && this.props.media.duration != 0 && this.props.media.duration != 0.1) {
-      if (this.state.onFirstSongStill) {
-        this.props.removeFromPlaylist(this.props.playlist[0]);
-        this.state.onFirstSongStill = false;
-        this.setState({
-          onFirstSongStill: false
-        });
-      }
-      else {
 
-      }
-    }
-    else if (!this.state.onFirstSongStill) {
-      this.state.onFirstSongStill = true;
-      this.setState({
-        onFirstSongStill: true
-      });
-      try {
-        this.props.media.play();
-      }catch(e) {
-        
-      }
-    }
-    else if (this.props.media.currentTime === 0 && this.props.media.duration != 0) {
-      try {
-        this.props.media.play();
-      }catch(e) {
-        
-      }
-    }
-    else if (this.props.media.currentTime != 0 && this.props.media.duration != 0 && !this.props.media.isPlaying) {
-      if (this.state.onFirstSongStill) {
-        this.props.removeFromPlaylist(this.props.playlist[0]);
-      }
-    }
   }
 
-  playLoadedSong() {
-    this.props.media.play();
+  nextSong() {
+    this.props.removeFromPlaylist(this.state.playlist[0]);
   }
+  render () {
 
-  render() {
-    const { Player, media } = this.props
-    const { playPause } = media
+    const {
+      url
+    } = this.state;
 
     return (
-      <div className={styles}>
-        <div className={styles.mediaplayer} onClick={() => playPause()}>
-          { Player }
-        </div>
-        <nav className={styles.mediacontrols}>
-          <PlayPause/>
-          <CurrentTime/>
-          <SeekBar/>
-          <Duration/>
-          <MuteUnmute/>
-          <Volume/>
-          <Fullscreen/>
-        </nav>
+      <div className='app'>
+        <section className='section'>
+          <h1>ReactPlayer</h1>
+          <ReactPlayer
+            ref='player'
+            className='react-player'
+            controls={true}
+            width={500}
+            height={300}
+            url={url}
+            playing={true}
+            volume={0.7}
+            //onStart={}
+            //onPlay={}
+            //onPause={}
+            //onBuffer={}
+            onEnded={this.nextSong.bind(this)}
+          />
+        </section>
+        <footer className='footer'>
+        </footer>
       </div>
     )
   }
 }
-
-Jukebox = withMediaPlayer(withMediaProps(Jukebox));
-
-export default Jukebox;

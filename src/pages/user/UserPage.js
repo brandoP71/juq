@@ -120,6 +120,10 @@ class UserPage extends Component {
 
         songlistRef.set(thisComponent.state.songlist);
 
+        thisComponent.state.selectedSong = songObject;
+
+        thisComponent.addToPlaylist();
+
         $('#YTForm')[0].reset();
 
       });
@@ -146,7 +150,7 @@ class UserPage extends Component {
     $("#songlist").empty();
     this.state.songlist.forEach(function(song) {
       $("#songlist").append
-      ('<li className="songlistItem" value="' + song.id + '" id="' + song.id + '" ><p>Title: ' + song.title + '</p><p>Artist: ' + song.artist + '</p></li>');
+      ('<li className="songlistItem" value="' + song.id + '" id="' + song.id + '" ><p><b>' + song.title + '</b></p><p>' + song.artist + '</p></li>');
       $("#" + song.id).click(function() {
         thisComponent.state.selectedSong = song;
         thisComponent.setState({
@@ -158,15 +162,18 @@ class UserPage extends Component {
     });
 
     $("#playlist").empty();
+    var counter = 0;
     this.state.playlist.forEach(function(song) {
         var listID = 'id="' + song.id + 'playlist"';
         listID = listID.replace(/\s+/g, '');
         $("#playlist").append
-        ('<li className="songlistItem" ' + listID + '><p>Title: ' + song.title + '</p><p>Artist: ' + song.artist + '</p></li>');
+        ('<li className="songlistItem" ' + listID + '><p><span id="title' + counter + '"><b>' + song.title + '</b></span></p><p>' + song.artist + '</p></li>');
     });
     if (this.state.playlist.length > 0) {
-      $("#" + this.state.playlist[0].id + "playlist").append("<p style='color:red'><b>CURRENTLY LOADED</b></p>");
+      $("#" + this.state.playlist[0].id + "playlist").css('border-color', '#39B44A');
+      $("#title" + counter).css('color', '#39B44A');
     }
+    counter++;
 	}
 
   componentWillUpdate() {
@@ -206,38 +213,49 @@ class UserPage extends Component {
   render() {
     return (
       <div className={styles.page}>
+        <div className={styles.header}>
+          <p>the workplace music player</p>
+          <div className={styles.jbLogo}>
+            <h1>JUKEBOX</h1>
+          </div>        
+        </div>
 
-        <div className={styles.formContainer}>
-          <h1>Upload a URL Source!</h1>
-          <form id="sourceForm" encType="multipart/form-data" method="post">
-            <br />
-            <br />
-            <label htmlFor="artistInput">(OPTIONAL) Artist --> </label>
-            <input type="text"  ref="artistInput" name="artistInput" />
-            <br />
-            <br />
-            <label htmlFor="srcInput">Source (YouTube URL) --> </label>
-            <input type="text" ref="srcInput" name="srcInputt" />
-            <br />
-            <br />
-            <input type="submit" value="Submit" />
+        <p className={styles.addSongHeader}>ADD A SONG</p>
+
+        <div className={styles.youtubeFormContainer}>
+          <form id="YTForm">        
+            <section className={styles.formSection}>
+              <div className={styles.formFieldDiv}>
+                <label htmlFor="YTTitleInput">SONG TITLE</label>
+                <br/>
+                <input type="text" ref="YTTitleInput" name="YTTitleInput" required/>
+              </div>
+
+              <div className={styles.formFieldDiv}>
+                <label htmlFor="YTArtistInput">ARTIST NAME</label>
+                <br />
+                <input type="text"  ref="YTArtistInput" name="YTArtistInput" required/>
+              </div>
+
+              <input type="submit" value="+" />
+            </section>
           </form>
         </div>
 
-        <div className={styles.youtubeFormContainer}>
-          <h1>Enter a song title and artist, watch the magic.</h1>
-          <form id="YTForm">
-            <br />
-            <br />
-            <label htmlFor="YTArtistInput">(REQUIRED) Artist --> </label>
-            <input type="text"  ref="YTArtistInput" name="YTArtistInput" required/>
-            <br />
-            <br />
-            <label htmlFor="YTTitleInput">Title (REQUIRED) --> </label>
-            <input type="text" ref="YTTitleInput" name="YTTitleInput" required/>
-            <br />
-            <br />
-            <input type="submit" value="Submit" />
+        <div className={styles.formSeperator}>
+          <hr className={styles.hrLine} width="175"/> <span className={styles.OR}>OR</span> <hr className={styles.hrLine} width="175"/>
+        </div>
+
+        <div className={styles.formContainer}>
+          <form id="sourceForm">
+            <section className={styles.formSection}>
+              <div className={styles.formFieldDiv}>
+                <label htmlFor="srcInputt">YOUTUBE URL</label>
+                <br/>
+                <input type="text" ref="srcInput" name="srcInputt" required/>
+              </div>
+              <input type="submit" value="+" />
+            </section>
           </form>
         </div>
 
@@ -260,7 +278,7 @@ class UserPage extends Component {
         </div>
 
         <div className={styles.playlistContainer}>
-        <h1>The Playlist</h1>
+        <h1>PLAYLIST</h1>
         <div className={styles.controlButtons}>
           <ul>
             <li>
@@ -275,6 +293,7 @@ class UserPage extends Component {
           </ol>
         </div>
       </div>
+      <p className={styles.credit}>Design by Shujaat Syed || Thinkingbox Media and Design</p>
       </div>
     )
   }
