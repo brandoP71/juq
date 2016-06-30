@@ -16,12 +16,15 @@ export default class Jukebox extends Component {
 
     this.state = {
       url: null,
-      playlist: []
+      playlist: [],
+      playing: false
     }
   }
   load(url) {
+    this.state.playing = true;
     this.setState({
-      url
+      url: url,
+      playing: this.state.playing
     })
   }
 
@@ -41,8 +44,10 @@ export default class Jukebox extends Component {
         }
         else if (thisComponent.state.playlist.length === 0) {
           thisComponent.state.url = null;
+          thisComponent.state.playing = false;
           thisComponent.setState({
-            url: thisComponent.state.url
+            url: thisComponent.state.url,
+            playing: thisComponent.state.playing
           });
         }
       } 
@@ -61,7 +66,7 @@ export default class Jukebox extends Component {
   render () {
 
     const {
-      url
+      url, playing
     } = this.state;
 
     return (
@@ -75,7 +80,7 @@ export default class Jukebox extends Component {
             width={500}
             height={300}
             url={url}
-            playing={true}
+            playing={playing}
             volume={0.7}
             //onStart={}
             //onPlay={}
