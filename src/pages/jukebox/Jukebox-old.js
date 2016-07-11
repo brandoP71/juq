@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { withMediaPlayer, withMediaProps, controls } from 'react-media-player';
-const { PlayPause, CurrentTime, Progress, SeekBar, Duration, MuteUnmute, Volume, Fullscreen } = controls;
-import styles from './jukeboxstyles.css';
+import styles from './styles.css';
+import Youtube from 'react-youtube';
 import $ from 'jquery';
+var Firebase = require('firebase');
 
 // Firebase
 //var Rebase = require('re-base');
@@ -12,94 +12,86 @@ class Jukebox extends Component {
   constructor() {
     super();
 
-    this.state = {
-      onFirstSongStill: true
+    this.opts = {
+      currentlyPlaying: false
     }
   }
 
+  componentWillMount() {
+  }
+
   componentDidMount() {
-    try {
-      this.props.media.play();
-    }catch(e) {
-      var nothing = 'nothing';
+    if (this.props.playlist.length > 0) {
+      this.opts.currentlyPlaying = true;
     }
   }
 
   componentDidUpdate() {
+  
+  }
+
+  shouldComponentUpdate() {
+    if (this.refs.ytPlayer.props.opts.currentlyPlaying === true) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
+  initPlayer(event) {
     var thisComponent = this;
-
-    /*if (window.addEventListener) {
-
-        // bind focus event
-        window.addEventListener("focus", function (event) {
-
-            // tween resume() code goes here
-            setTimeout(function(){              
-            },500);
-
-        }, false);
-
+    if (this.opts.playlist.length > 0) {
+      event.target.cueVideoById(this.opts.playlist[0].url, 3);
+      event.target.playVideo();
+      thisComponent.opts.currentlyPlaying = true;
     }
+  }
 
-    if(this.props.media.currentTime > (this.props.media.duration - 4) && this.props.media.duration != 0 && this.props.media.duration != 0.1) {
-      if (this.state.onFirstSongStill) {
-        alert("play next song");
-        this.props.removeFromPlaylist(this.props.playlist[0]);
-        this.state.onFirstSongStill = false;
-        this.setState({
-          onFirstSongStill: false
-        });
-      }
-      else {
-
-      }
-    }
-    else if (!this.state.onFirstSongStill) {
-      this.state.onFirstSongStill = true;
-      this.setState({
-        onFirstSongStill: true
-      });
-      try {
-        this.props.media.play();
-      }catch(e) {
-      }
-    }
-    else if (this.props.media.currentTime === 0 && this.props.media.duration != 0) {
-      try {
-        this.props.media.play();
-      }catch(e) {
-      }
-    }
-    else if (this.props.media.currentTime != 0 && this.props.media.duration != 0 && !this.props.media.isPlaying) {
-      if (this.state.onFirstSongStill) {
-        this.props.removeFromPlaylist(this.props.playlist[0]);
-      }
-    }*/
+  nextSong() {
+    this.opts.currentlyPlaying = false;
+    this.opts.removeFromPlaylist(this.opts.playlist[0]);
   }
 
   render() {
-    const { Player, media } = this.props
-    const { playPause } = media
+
+    const opts = {
+      height: '400',
+      width: '600',
+      playerVars: { // https://developers.google.com/youtube/player_parameters
+        autoplay: 1
+      },
+      playlist: this.props.playlist,
+      removeFromPlaylist: this.props.removeFromPlaylist,
+      currentlyPlaying: this.opts.currentlyPlaying
+    };
 
     return (
-      <div className={styles}>
-        <div className={styles.mediaplayer} onClick={() => playPause()}>
-          { Player }
-        </div>
-        <nav className={styles.mediacontrols}>
-          <PlayPause/>
-          <CurrentTime/>
-          <SeekBar/>
-          <Duration/>
-          <MuteUnmute/>
-          <Volume/>
-          <Fullscreen/>
-        </nav>
+      <div className={styles.ytContainer}>
+        <Youtube
+          id="ytPlayer"
+          ref="ytPlayer"
+          opts={opts}
+          onReady={this.initPlayer}
+          onEnd={this.nextSong}
+        />
       </div>
     )
   }
-}
 
-Jukebox = withMediaPlayer(withMediaProps(Jukebox));
+  /*_onReady(event) {
+    // access to player in all event handlers via event.target
+    event.target.cueVideoById(this.opts.playlist[0].url);
+    event.target.playVideo();
+  }
+
+  _onEnd(event) {
+    if (this.opts.playlist.length > 1) {
+      event.target.cueVideoById(this.opts.playlist[1].url ,0);
+      event.target.playVideo();
+    }
+    this.opts.removeFromPlaylist(this.opts.playlist[0]);
+  }*/
+}
 
 export default Jukebox;

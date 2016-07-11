@@ -36,3 +36,14 @@ $gutter-width: 10px;
 .footer {
   margin: $gutter-width;
 }
+
+.carltonSection {
+  position: absolute;
+  left: -250px;
+  top: 0px;
+}
+
+.carltonSection img {
+  height: 600px;
+  width: 300px;
+}

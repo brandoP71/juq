@@ -183,7 +183,7 @@
 .songlist {
 	overflow: hidden;
 	overflow-y: scroll;
-	height: 600px;
+	height: 550px;
 	ol {
 		list-style: none;
 		width:80%;
