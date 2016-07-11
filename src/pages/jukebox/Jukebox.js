@@ -68,7 +68,7 @@ export default class Jukebox extends Component {
     const {
       url, playing
     } = this.state;
-    var carltonPath = require('./assets/carlton2.gif');
+    var carltonPath = require('../../../assets/carlton2.gif');
 
     return (
       <div className='app'>

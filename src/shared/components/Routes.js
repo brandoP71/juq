@@ -16,8 +16,8 @@ const userPage = (!isMobile()) ? UserPage : MobileUserPage;
 export default (
   <Route path="/" component={App}>
     <IndexRoute component={JukeboxCreatorChooser} />
-    <Route path="login/:jukeboxID" component={Login} />
-    <Route path="jukebox/:jukeboxID" component={JukeboxPage} />
-    <Route path="userPage/:jukeboxID" component={userPage} />
+    <Route path="/login/:jukeboxID" component={Login} />
+    <Route path="/jukebox/:jukeboxID" component={JukeboxPage} />
+    <Route path="/userPage/:jukeboxID" component={userPage} />
   </Route>
 );
