@@ -68,7 +68,7 @@ export default class Jukebox extends Component {
     const {
       url, playing
     } = this.state;
-    var carltonPath = require('../../../assets/carlton2.gif');
+    var carltonPath = require('./assets/carlton2.gif');
 
     return (
       <div className='app'>
@@ -91,7 +91,7 @@ export default class Jukebox extends Component {
           />
         </section>
         <div className='carltonSection'>
-          <img src={carltonPath} alt="Not Founded" title="Not Found" />
+          <img src={carltonPath} alt="Not Found" title="Not Found" />
         </div>
         <footer className='footer'>
         </footer>
