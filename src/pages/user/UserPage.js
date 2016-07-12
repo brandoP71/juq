@@ -12,7 +12,8 @@ class UserPage extends Component {
     this.state = {
       playlist:[],
       songlist:[],
-      selectedSong: null
+      selectedSong: null,
+      songChoices: []
     }
   }
 
@@ -59,11 +60,10 @@ class UserPage extends Component {
     // HANDLE SOURCE FORM SUBMIT
     $("#sourceForm").submit(function(e)
     {
-      var artist = thisComponent.refs.artistInput.value;
       var id = Date.now();
       var url = thisComponent.refs.srcInput.value;
       var videoID;
-
+      var artist;
       var title;
 
       var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -76,20 +76,28 @@ class UserPage extends Component {
 
       var ytApiKey = "AIzaSyB5zz7R6AudAf5yxZK05WZhn7sZCiL4Esk";
 
-      $.get("https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + videoID + "&key=" + ytApiKey, function(data) {
+      $.get("https://www.googleapis.com/youtube/v3/videos?key=" + ytApiKey + "&part=snippet&id=" + videoID, function(data) {
         title = data.items[0].snippet.title;
+        artist = "URL Submission";
+
+        title = title.replace(/video|lyrics/g, function myFunction(x){return ""});
+        title = title.replace(/[()]/g, ''); 
 
         var songObject = { id: id, title: title, artist: artist, filename: 'url_source', url: url };
 
         e.stopImmediatePropagation();
-        e.preventDefault(); //Prevent Default action.
+        e.preventDefault();
 
         thisComponent.state.songlist.push(songObject);
 
         songlistRef.set(thisComponent.state.songlist);
 
-        $('#sourceForm')[0].reset();
+        thisComponent.state.selectedSong = songObject;
+
+        thisComponent.addToPlaylist();
       });
+
+      $('#sourceForm')[0].reset();
 
       return false;
     });
@@ -97,22 +105,50 @@ class UserPage extends Component {
     // YT FORM SUBMIT
     $("#YTForm").submit(function(e)
     {
+      e.preventDefault();
       var artist = thisComponent.refs.YTArtistInput.value;
       var title = thisComponent.refs.YTTitleInput.value;
-      var id = Date.now();
-      var url;
-      var videoID;
-
-      var urlTitle = title.replace(/ /g, '+');
-      var urlArtist = artist.replace(/ /g, '+');
-
+      var selectedID = thisComponent.refs.YTSelect.value;
       var ytApiKey = "AIzaSyB5zz7R6AudAf5yxZK05WZhn7sZCiL4Esk";
+      if (artist !== "" && title !== "" && artist !== null && title !== null && selectedID === null || selectedID === "") {
 
-      $.get("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=" + urlTitle + "%2B" + urlArtist + "&type=video&videoCategoryId=10&key=" + ytApiKey, function(data) {
-        videoID = data.items[0].id.videoId;
+        var urlTitle = title.replace(/ /g, '+');
+        var urlArtist = artist.replace(/ /g, '+');
 
-        url = "https://www.youtube.com/watch?v=" + videoID;
+        $.get("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=" + urlTitle + "%2B" + urlArtist + "&type=video&key=" + ytApiKey, function(data) {
+          data.items.forEach(function(result) {
+            if (result.snippet.title.toUpperCase().indexOf("(LIVE)") > -1 || result.snippet.title.toUpperCase().indexOf("COVER") > -1 || result.snippet.title.toUpperCase().indexOf("CONCERT") > -1
+              || result.snippet.title.toUpperCase().indexOf(artist.toUpperCase()) < 0) {
 
+            }
+            else {
+              thisComponent.state.songChoices.push(result);
+            }
+          });
+
+          thisComponent.state.songChoices.forEach(function(result) {
+            $.get("https://www.googleapis.com/youtube/v3/videos?id=" + result.id.videoId + "&part=contentDetails&key=" + ytApiKey, function(data) {
+              var seconds = thisComponent.getYTDuration(data.items[0].contentDetails.duration);
+              var minutes = Math.floor(seconds/60);
+              var remainder = (seconds % 60);
+              var title = result.snippet.title.replace(/video|lyrics/g, function myFunction(x){return ""});
+              title = title.replace(/[()]/g, ''); 
+              $("#YTSelectSong").append(
+                '<option value="' + result.id.videoId +'" title="' + result.snippet.description + '">'
+                 + title + ',  Minutes: ' + minutes + ' Seconds: ' + remainder + '</option>'
+              );
+            });
+          });
+
+          $("#YTTitleDiv").css("display","none");
+          $("#YTArtistDiv").css("display","none");
+          $("#YTSelectDiv").css("visibility","visible");
+        });
+      }
+      else if (selectedID !== "" && selectedID !== null) {
+        var id = Date.now();
+
+        var url = "https://www.youtube.com/watch?v=" + selectedID;
 
         var songObject = { id: id, title: title, artist: artist, filename: 'url_source', url: url };
 
@@ -126,18 +162,14 @@ class UserPage extends Component {
 
         $('#YTForm')[0].reset();
 
-      });
-        /*title = data.items[0].snippet.title;
+        $("#YTSelectSong").html('');
 
-        var songObject = { id: id, title: title, artist: artist, filename: 'url_source', url: url };
+        thisComponent.state.songChoices = [];
 
-        
-
-        thisComponent.state.songlist.push(songObject);
-
-        songlistRef.set(thisComponent.state.songlist);
-
-        $('#sourceForm')[0].reset();*/
+        $("#YTTitleDiv").css("display","inline");
+        $("#YTArtistDiv").css("display","inline");
+        $("#YTSelectDiv").css("visibility","hidden");
+      }
 
       e.stopImmediatePropagation();
       e.preventDefault(); //Prevent Default action.
@@ -178,6 +210,15 @@ class UserPage extends Component {
 
   componentWillUpdate() {
   }
+
+  getYTDuration(yt_duration){
+    var time_extractor = /([0-9]*)M([0-9]*)S$/;
+    var extracted = time_extractor.exec( yt_duration );
+    var minutes = parseInt( extracted[1], 10 );
+    var seconds = parseInt( extracted[2], 10 );
+    var durationn = ( minutes * 60 ) + seconds;
+    return durationn;
+  };
 
   addToPlaylist() {
     var playlistRef = new Firebase(
@@ -225,16 +266,23 @@ class UserPage extends Component {
         <div className={styles.youtubeFormContainer}>
           <form id="YTForm">        
             <section className={styles.formSection}>
-              <div className={styles.formFieldDiv}>
+              <div className={styles.formFieldDiv} id="YTTitleDiv">
                 <label htmlFor="YTTitleInput">SONG TITLE</label>
                 <br/>
-                <input type="text" ref="YTTitleInput" name="YTTitleInput" required/>
+                <input type="text" ref="YTTitleInput" name="YTTitleInput"/>
               </div>
 
-              <div className={styles.formFieldDiv}>
+              <div className={styles.formFieldDiv} id="YTArtistDiv">
                 <label htmlFor="YTArtistInput">ARTIST NAME</label>
                 <br />
-                <input type="text"  ref="YTArtistInput" name="YTArtistInput" required/>
+                <input type="text"  ref="YTArtistInput" name="YTArtistInput"/>
+              </div>
+
+              <div className={styles.formFieldDiv} style={{visibility: 'hidden'}} id="YTSelectDiv">
+                <label htmlFor="YTSelect">Song Options</label>
+                <br />
+                <select id="YTSelectSong" ref="YTSelect" name="YTSelect">
+                </select>
               </div>
 
               <input type="submit" value="+" />
