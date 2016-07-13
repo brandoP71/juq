@@ -41,7 +41,7 @@
 	top: 30%;
 	width: 350px;
 	left: 20%;
-	margin-left: 20px;
+	margin-left: 100px;
 	font-size: 22px;
 	letter-spacing: 2px;
 }
@@ -164,10 +164,23 @@
 	display: none;
 }
 
+.songListItem {
+  -webkit-transition: all 2s ease;  
+  -moz-transition: all 2s ease;  
+  -o-transition: all 2s ease;  
+  -ms-transition: all 2s ease;  
+  transition: all 2s ease;
+}
+
+.songListItem-active {
+	opacity: 1;
+	font-size: 24px;
+}
+
 .playlistContainer {
 	width: 25%;
 	top: 13%;
-	right: 175px;
+	right: 100px;
 	position: absolute;
 	text-align: left;
 }

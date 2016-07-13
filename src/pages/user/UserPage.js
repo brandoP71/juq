@@ -13,7 +13,11 @@ class UserPage extends Component {
       playlist:[],
       songlist:[],
       selectedSong: null,
-      songChoices: []
+      songChoices: [],
+      songAdded: false,
+      playlistLength: 0,
+      oldPlaylist: [],
+      songRemoved: false
     }
   }
 
@@ -42,7 +46,21 @@ class UserPage extends Component {
 
     playlistRef.on("value", function(snapshot) {
       if (snapshot.val() != null) {
+        thisComponent.state.oldPlaylist = thisComponent.state.playlist;
         thisComponent.state.playlist = snapshot.val();
+        if (thisComponent.state.playlistLength === 0) {
+          thisComponent.state.playlistLength = thisComponent.state.playlist.length;
+        }
+        else {
+          if (thisComponent.state.playlist.length > thisComponent.state.playlistLength) {
+            thisComponent.state.songAdded = true;
+            thisComponent.state.playlistLength = thisComponent.state.playlist.length;
+          }
+          else if (thisComponent.state.playlist.length < thisComponent.state.playlistLength) {
+            thisComponent.state.songRemoved = true;
+            thisComponent.state.playlistLength = thisComponent.state.playlist.length;
+          }
+        }
         thisComponent.setState({
           playlist: thisComponent.state.playlist
         });
@@ -110,7 +128,7 @@ class UserPage extends Component {
       var title = thisComponent.refs.YTTitleInput.value;
       var selectedID = thisComponent.refs.YTSelect.value;
       var ytApiKey = "AIzaSyB5zz7R6AudAf5yxZK05WZhn7sZCiL4Esk";
-      if (artist !== "" && title !== "" && artist !== null && title !== null && selectedID === null || selectedID === "") {
+      if (artist !== "" && title !== "" && selectedID === "") {
 
         var urlTitle = title.replace(/ /g, '+');
         var urlArtist = artist.replace(/ /g, '+');
@@ -193,19 +211,77 @@ class UserPage extends Component {
       });
     });
 
-    $("#playlist").empty();
-    var counter = 0;
-    this.state.playlist.forEach(function(song) {
-        var listID = 'id="' + song.id + 'playlist"';
-        listID = listID.replace(/\s+/g, '');
-        $("#playlist").append
-        ('<li className="songlistItem" ' + listID + '><p><span id="title' + counter + '"><b>' + song.title + '</b></span></p><p>' + song.artist + '</p></li>');
-    });
-    if (this.state.playlist.length > 0) {
-      $("#" + this.state.playlist[0].id + "playlist").css('border-color', '#39B44A');
-      $("#title" + counter).css('color', '#39B44A');
+    if (this.state.songRemoved) {
+      var removedSongFound = false;
+      for (var i = 0; i < this.state.playlist.length; i++) {
+        if (this.state.playlist[i].id !== this.state.oldPlaylist[i].id) {
+          $("#" + this.state.oldPlaylist[i].id + "playlist").animate({opacity: "0", fontSize: "0px"}, 1000);
+          $("#title" + String(i)).animate({fontSize: "0px"}, 1000);
+          removedSongFound = true;
+        }
+      }
+      if (!removedSongFound) {
+        $("#" + this.state.oldPlaylist[this.state.oldPlaylist.length - 1].id + "playlist").animate({opacity: "0", fontSize: "0px"}, 1000);
+        $("#title" + String(this.state.oldPlaylist.length - 1)).animate({fontSize: "0px"}, 1000);
+      }
+      this.state.songRemoved = false;
+
+      setTimeout(function() {
+        $("#playlist").empty();
+        var counter = 0;
+        var firstSong = true;
+        thisComponent.state.playlist.forEach(function(song) {
+            var listID = 'id="' + song.id + 'playlist"';
+            listID = listID.replace(/\s+/g, '');
+            $("#playlist").append
+            ('<li className="songlistItem" ' + listID + '><p><span id="title' + counter + '"><b>' + song.title + '</b></span></p><p>' + song.artist + '</p></li>');
+            counter++;
+        });
+        if (thisComponent.state.playlist.length > 0) {
+          $("#" + thisComponent.state.playlist[0].id + "playlist").css('border-color', '#39B44A');
+          $("#title" + '0').css('color', '#39B44A');
+          if (thisComponent.state.songAdded) {
+            $("#" + thisComponent.state.playlist[thisComponent.state.playlist.length - 1].id + "playlist").css('opacity', '0');
+            $("#" + thisComponent.state.playlist[thisComponent.state.playlist.length - 1].id + "playlist").css('font-size', '0px');
+            $("#" + thisComponent.state.playlist[thisComponent.state.playlist.length - 1].id + "playlist").animate({opacity: "1", fontSize: "18px"}, 2000);
+            $("#title" + String(counter - 1)).css('font-size', '0px');
+            $("#title" + String(counter - 1)).animate({fontSize: "24px"}, 2000);
+            thisComponent.state.songAdded = false;
+          }
+        }
+      }, 900);
     }
-    counter++;
+    else {
+      $("#playlist").empty();
+      var counter = 0;
+      var firstSong = true;
+      this.state.playlist.forEach(function(song) {
+          var listID = 'id="' + song.id + 'playlist"';
+          listID = listID.replace(/\s+/g, '');
+          $("#playlist").append
+          ('<li className="songlistItem" ' + listID + '><p><span id="title' + counter + '"><b>' + song.title + '</b></span></p><p>' + song.artist + '</p></li>');
+          counter++;
+      });
+      if (this.state.playlist.length > 0) {
+        $("#" + this.state.playlist[0].id + "playlist").css('border-color', '#39B44A');
+        $("#title" + '0').css('color', '#39B44A');
+        if (thisComponent.state.playlist.length === 1) {
+          $("#" + thisComponent.state.playlist[0].id + "playlist").css('opacity', '0');
+          $("#" + thisComponent.state.playlist[0].id + "playlist").css('font-size', '0px');
+          $("#" + thisComponent.state.playlist[0].id + "playlist").animate({opacity: "1", fontSize: "18px"}, 2000);
+          $("#title" + String(0)).css('font-size', '0px');
+          $("#title" + String(0)).animate({fontSize: "24px"}, 2000);
+        }
+        if (this.state.songAdded) {
+          $("#" + this.state.playlist[this.state.playlist.length - 1].id + "playlist").css('opacity', '0');
+          $("#" + this.state.playlist[this.state.playlist.length - 1].id + "playlist").css('font-size', '0px');
+          $("#" + this.state.playlist[this.state.playlist.length - 1].id + "playlist").animate({opacity: "1", fontSize: "18px"}, 2000);
+          $("#title" + String(counter - 1)).css('font-size', '0px');
+          $("#title" + String(counter - 1)).animate({fontSize: "24px"}, 2000);
+          this.state.songAdded = false;
+        }
+      }
+    }
 	}
 
   componentWillUpdate() {
@@ -240,6 +316,8 @@ class UserPage extends Component {
       if (!found) {
         this.state.playlist.push(song);
         playlistRef.set(this.state.playlist);
+
+        this.state.songAdded = true;
 
         this.setState({
           playlist: this.state.playlist
