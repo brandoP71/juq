@@ -39,7 +39,7 @@ export default class Jukebox extends Component {
     playlistRef.on("value", function(snapshot) {
       if (snapshot.val() != null) {
         thisComponent.state.playlist = snapshot.val();
-        if (thisComponent.state.playlist.length === 1) {
+        if (thisComponent.state.playlist.length > 0) {
           thisComponent.load(thisComponent.state.playlist[0].url);
         }
         else if (thisComponent.state.playlist.length === 0) {

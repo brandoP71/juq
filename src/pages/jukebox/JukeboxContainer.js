@@ -47,7 +47,7 @@ class App extends React.Component {
 		// HANDLE PLAYLIST INIT
 		playlistRef.on("value", function(snapshot) {
 			if (snapshot.val() != null) {
-				var array = snapshot.val();
+				/*var array = snapshot.val();
 				var song = array[array.length - 1];
 				if (song.filename === 'url_source') {
 					var found = false;
@@ -66,12 +66,12 @@ class App extends React.Component {
 							currentSource: thisComponent.state.currentSource
 						});
 					}
-				}
+				}*/
 				thisComponent.state.playlist = snapshot.val();
 				thisComponent.setState({
 					playlist: thisComponent.state.playlist
 				});
-				if (array[0].filename !== 'url_source') {
+				/*if (array[0].filename !== 'url_source') {
 					var songSrc = require('../../../assets/' + array[0].filename.replace(/\.[^/.]+$/, "") + '.mp3');
 					thisComponent.state.currentSource = songSrc;
 					thisComponent.setState({
@@ -84,7 +84,7 @@ class App extends React.Component {
 					thisComponent.setState({
 						currentSource: thisComponent.state.currentSource
 					});
-				}
+				}*/
 			}	
 		}, function (errorObject) {
 		  console.log("The read failed: " + errorObject.code);
