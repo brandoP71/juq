@@ -233,8 +233,18 @@ class UserPage extends Component {
         thisComponent.state.playlist.forEach(function(song) {
             var listID = 'id="' + song.id + 'playlist"';
             listID = listID.replace(/\s+/g, '');
-            $("#playlist").append
-            ('<li className="songlistItem" ' + listID + '><p><span id="title' + counter + '"><b>' + song.title + '</b></span></p><p>' + song.artist + '</p></li>');
+            if (firstSong) {
+              $("#playlist").append
+            ('<li className="songlistItem" ' + listID + '><p><span id="title' + counter + '"><b>' + song.title + '</b></span></p><p>' + song.artist + '</p>' +
+              '<div className="preloader_1"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>' +
+            '</div></li>');
+            firstSong = false;
+            }
+            else {
+              $("#playlist").append
+            ('<li className="songlistItem" ' + listID + '><p><span id="title' + counter + '"><b>' + song.title + '</b></span></p><p>' + song.artist + '</p>' +
+            '</div></li>');
+            }
             counter++;
         });
         if (thisComponent.state.playlist.length > 0) {
@@ -258,8 +268,19 @@ class UserPage extends Component {
       this.state.playlist.forEach(function(song) {
           var listID = 'id="' + song.id + 'playlist"';
           listID = listID.replace(/\s+/g, '');
-          $("#playlist").append
-          ('<li className="songlistItem" ' + listID + '><p><span id="title' + counter + '"><b>' + song.title + '</b></span></p><p>' + song.artist + '</p></li>');
+
+          if (firstSong) {
+            $("#playlist").append
+          ('<li className="songlistItem" ' + listID + '><p><span id="title' + counter + '"><b>' + song.title + '</b></span></p><p>' + song.artist + '</p>' +
+            '<div className="preloader_1"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>' +
+          '</div></li>');
+          firstSong = false;
+          }
+          else {
+            $("#playlist").append
+          ('<li className="songlistItem" ' + listID + '><p><span id="title' + counter + '"><b>' + song.title + '</b></span></p><p>' + song.artist + '</p>' +
+          '</div></li>');
+          }
           counter++;
       });
       if (this.state.playlist.length > 0) {
@@ -404,21 +425,23 @@ class UserPage extends Component {
         </div>
 
         <div className={styles.playlistContainer}>
-        <h1>PLAYLIST</h1>
-        <div className={styles.controlButtons}>
-          <ul>
-            <li>
-            </li>
-          </ul>
+          <h1>PLAYLIST</h1>
+          <div className={styles.controlButtons}>
+            <ul>
+              <li>
+              </li>
+            </ul>
 
+          </div>
+
+          <div className="preloader"></div>
+
+          <div className={styles.songlist}>
+            <ol id="playlist">
+
+            </ol>
+          </div>
         </div>
-
-        <div className={styles.songlist}>
-          <ol id="playlist">
-
-          </ol>
-        </div>
-      </div>
       <p className={styles.credit}>Design by Shujaat Syed || Thinkingbox Media and Design</p>
       </div>
     )
