@@ -160,7 +160,9 @@ class UserPage extends Component {
 
           $("#YTTitleDiv").css("display","none");
           $("#YTArtistDiv").css("display","none");
-          $("#YTSelectDiv").css("visibility","visible");
+          $("#YTSelectDiv").css("display","inline");
+          $("#submitSongInput").prop("value", "Add");
+          $("#submitSongInput").css("font-size", "24px");
         });
       }
       else if (selectedID !== "" && selectedID !== null) {
@@ -186,7 +188,9 @@ class UserPage extends Component {
 
         $("#YTTitleDiv").css("display","inline");
         $("#YTArtistDiv").css("display","inline");
-        $("#YTSelectDiv").css("visibility","hidden");
+        $("#YTSelectDiv").css("display","none");
+        $("#submitSongInput").prop("value", "+");
+        $("#submitSongInput").css("font-size", "34px");
       }
 
       e.stopImmediatePropagation();
@@ -349,6 +353,18 @@ class UserPage extends Component {
       alert("Please select a song from the Songlist");
     }
   }
+
+  cancelSongAddition() {
+    $('#YTForm')[0].reset();
+
+    $("#YTSelectSong").html('');
+
+    this.state.songChoices = [];
+
+    $("#YTTitleDiv").css("display","inline");
+    $("#YTArtistDiv").css("display","inline");
+    $("#YTSelectDiv").css("display","none");
+  }
   
   render() {
     return (
@@ -377,14 +393,15 @@ class UserPage extends Component {
                 <input type="text"  ref="YTArtistInput" name="YTArtistInput"/>
               </div>
 
-              <div className={styles.formFieldDiv} style={{visibility: 'hidden'}} id="YTSelectDiv">
+              <div className={styles.formFieldDiv} style={{display: 'none'}} id="YTSelectDiv">
                 <label htmlFor="YTSelect">Song Options</label>
                 <br />
                 <select id="YTSelectSong" ref="YTSelect" name="YTSelect">
                 </select>
+                <button onClick={this.cancelSongAddition.bind(this)}>Cancel</button>
               </div>
 
-              <input type="submit" value="+" />
+              <input id="submitSongInput" type="submit" value="+" />
             </section>
           </form>
         </div>

@@ -10,6 +10,16 @@
 	border: 3px black outset;
 }
 
+.loginform div {
+	display: inline-block;
+	width: 45%;
+}
+
+.loginform form {
+	margin-left: 60px;
+	width: 100%;
+}
+
 .loginform button {
 	width: 110px;
 	height: 33px;
@@ -19,8 +29,8 @@
 
 .loginform h1 {
 	margin: 0 auto;
-	padding-top: 20px;
-	width: 40%;
+	padding-top: 10px;
+	width: 60%;
 }
 
 .jbNameLabel {
@@ -29,10 +39,10 @@
 
 .loginform p {
 	margin: 0 auto;
-	width: 65%;
+	width: 100%;
 	height: 4em;
 	font-size: 18px;
-	margin-top: 25px;
+	margin-top: 20px;
 }
 
 .loginform input[type="text"], input[type="password"] {
@@ -45,6 +55,5 @@
 .loginform input[type="submit"] {
 	width: 7em;
 	height: 2em;
-	float: right;
 	border: outset 4px;
 }

@@ -31,7 +31,7 @@ class jukeboxCreatorChooser extends Component {
         jukeboxKeys = Object.keys(jukeboxes);
 
         for(var i = 0; i < jukeboxKeys.length; i++) {
-          $("#jbNameSelect").append("<option value='" + jukeboxKeys[i] + "'>" + jukeboxKeys[i] + "</option>");
+          $("#jbNameSelect").append('<option value="' + jukeboxKeys[i] + '">' + jukeboxKeys[i] + '</option>');
         }
       }
     }, function (errorObject) {
@@ -42,12 +42,13 @@ class jukeboxCreatorChooser extends Component {
     {
       var jbName = thisComponent.refs.createJBName.value.replace(/\s+/g, '-').toLowerCase();
       var jbPasswort = thisComponent.refs.createJBPassword.value;
+      var jbGuestPasswort = thisComponent.refs.createJBGuestPassword.value;
 
       var jbNode = [];
       var playlist = [];
       var songlist = [];
 
-      var auth = { name: jbName, passwort: jbPasswort };
+      var auth = { name: jbName, passwort: jbPasswort, guestPasswort: jbGuestPasswort };
 
       var nodeRef = new Firebase(
         "https://jukebox-app-e8c39.firebaseio.com/" + jbName + '/'
@@ -90,6 +91,8 @@ class jukeboxCreatorChooser extends Component {
             <input type="text" ref="createJBPassword" name="createJBPassword" />
             <br />
             <br />
+            <label htmlFor="createJBGuestPassword">Jukebox Guest Passwort:</label>
+            <input type="text" ref="createJBGuestPassword" name="createJBGuestPassword" />
             <input type="submit" value="Submit" />
           </form>
         </div>
