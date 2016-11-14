@@ -6,13 +6,12 @@ import React from 'react';
 import Jukebox from './Jukebox';
 import Songlist from './Songlist';
 import Playlist from './Playlist';
-import Catalyst from 'react-catalyst';
+import AdminBar from './AdminBar';
+
 import reactMixin from 'react-mixin';
 import { History } from 'react-router';
-import autobind from 'autobind-decorator';
-//import ReactAudioPlayer from 'react-audio-player';
 import $ from 'jquery';
-import styles from './styles.css';
+import styles from './styles/styles.css';
 
 var Firebase = require('firebase');
 
@@ -22,10 +21,8 @@ class App extends React.Component {
 		super();
 
 		this.state = {
-			playlist: [
-			],
-			songlist: [
-			],
+			playlist: [],
+			songlist: [],
 			currentSource: null
 		}
 	}
@@ -136,7 +133,7 @@ class App extends React.Component {
 					});
 
 					songlistRef.set(thisComponent.state.songlist);
-					alert("Your music/source was added to the server successfully.");
+					alert("Your mp3 was added to the server successfully.");
 			    },
 			     error: function(jqXHR, textStatus, errorThrown) 
 			     {
@@ -237,22 +234,42 @@ class App extends React.Component {
 
 	render() {
 		//const jukebox = 
-			//(this.state.playlist.length > 0 && this.state.currentSource != null) ? 
-			{/*<Jukebox
-			src={this.state.currentSource}
-			playlist={this.state.playlist}
-			removeFromPlaylist={this.removeFromPlaylist.bind(this)}
-			jukeboxID={this.props.params.jukeboxID}
-			/> //: */}
-			//<h1>The playlist is curently empty!</h1>;
-		return  (
-			<div className={styles.page}>
-				<div className={styles.jukeboxContainer}>
-					<h1 className={styles.jukeboxHeader}>Welcome to the React powered Jukebox.</h1>
-					<Jukebox
-						removeFromPlaylist={this.removeFromPlaylist.bind(this)}
-						jukeboxID={this.props.params.jukeboxID}
-					/> 
+		//(this.state.playlist.length > 0 && this.state.currentSource != null) ? 
+		{/*<Jukebox
+		src={this.state.currentSource}
+		playlist={this.state.playlist}
+		removeFromPlaylist={this.removeFromPlaylist.bind(this)}
+		jukeboxID={this.props.params.jukeboxID}
+		/> //: */}
+		//<h1>The playlist is curently empty!</h1>;
+		const check = window.sessionStorage.getItem("pass");
+		if (check === null) {
+			return (<h1>No Authorization</h1>)
+		}
+		else {
+			return  (
+				<div className={styles.flexContainer}>
+					<AdminBar />
+					<div className={styles.jbContainer}>
+						<div className={styles.jbPlayer}>
+							<Jukebox
+								removeFromPlaylist={this.removeFromPlaylist.bind(this)}
+								jukeboxID={this.props.params.jukeboxID}
+							/>
+						</div>
+						<div className={styles.jbPlaylist}>
+							<Playlist 
+								jukeboxID={this.props.params.jukeboxID}
+								playlist={this.state.playlist}
+								removeFromPlaylist={this.removeFromPlaylist.bind(this)}
+							/>
+						</div>
+					</div>
+
+					<div className={styles.unusedContainer}>
+						<h1>More Content Coming...</h1>
+					</div>
+
 					{/*<br />
 					<br />
 					<p>Upload a Song!</p>
@@ -272,12 +289,17 @@ class App extends React.Component {
 				    </form>
 				    <br />
 					<br />*/}
-				    <button onClick={this.exitJukebox.bind(this)}>EXIT JUKEBOX</button>
+				    <div className={styles.recentContainer}>
+						<Songlist
+							jukeboxID={this.props.params.jukeboxID}
+							songs={this.state.songlist}
+							addToPlaylist={this.addToPlaylist.bind(this)}
+							removeSong={this.removeSong.bind(this)}
+						/>
+					</div>
 				</div>
-				<Songlist jukeboxID={this.props.params.jukeboxID} songs={this.state.songlist} addToPlaylist={this.addToPlaylist.bind(this)} removeSong={this.removeSong.bind(this)}/>
-				<Playlist jukeboxID={this.props.params.jukeboxID} playlist={this.state.playlist} removeFromPlaylist={this.removeFromPlaylist.bind(this)}/>
-			</div>
-		)
+			)
+		}
 	}
 };
 

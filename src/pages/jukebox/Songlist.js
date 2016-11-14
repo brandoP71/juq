@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styles from './styles.css';
+import styles from './styles/styles.css';
 import $ from 'jquery';
 
 var Firebase = require('firebase');
@@ -22,14 +22,24 @@ class Songlist extends Component {
     $("#songlist").empty();
     this.props.songs.forEach(function(song) {
       $("#songlist").append
-      ('<li className="songlistItem" value="' + song.id + '" id="' + song.id + '" ><p>Title: ' + song.title + '</p><p>Artist: ' + song.artist + '</p></li>');
-      $("#" + song.id).click(function() {
+      ('<li value="' + song.id + '" id="' + song.id + '" ><p><b>' + song.title + '</b></p><p>' + song.artist + '</p>' +
+          '<div id="' + song.id +'div">' + 
+          '<p><span id="' + song.id + 'replay" style="padding-right:5px;">Replay</span>' +
+          '<span id="' + song.id + 'remove" style="padding-left:5px;">Remove</span></p></div></li>');
+
+      $("#" + song.id + "replay").click(() => {
         thisComponent.state.selectedSong = song;
         thisComponent.setState({
           selectedSong: thisComponent.state.selectedSong
         });
-        $("#" + song.id).css("background-color", "red");
-        console.log(thisComponent.state.selectedSong);
+        thisComponent.addToPlaylist();
+      });
+      $("#" + song.id + "remove").click(() => {
+        thisComponent.state.selectedSong = song;
+        thisComponent.setState({
+          selectedSong: thisComponent.state.selectedSong
+        });
+        thisComponent.removeSong();
       });
     });
   }
@@ -57,27 +67,12 @@ class Songlist extends Component {
   
   render() {
     return (
-      <div className={styles.songlistContainer}>
-        <h1>Available Music</h1>
-        <div className={styles.controlButtons}>
-          <ul>
-            <li>
-                <button onClick={this.addToPlaylist.bind(this)}>Add to Playlist</button>
-            </li>
-            <li>
-                <button onClick={this.removeSong.bind(this)}>Delete Song</button>
-            </li>
-          </ul>
-
-        </div>
-
         <div className={styles.songlist}>
-          <ol id="songlist">
+          <h2>Jukebox Library</h2>
+          <ul id="songlist">
 
-          </ol>
+          </ul>
         </div>
-
-      </div>
     )
   }
 }

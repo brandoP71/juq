@@ -1,0 +1,21 @@
+.app {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  text-align: center;
+  margin-left: 15px;
+  h1 {
+  	background: darkred;
+    text-transform: uppercase;
+    font-family: 'Open Sans Condensed', sans-serif;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 20px;
+    margin: 10px 0px 0px 0px;
+    border: 3px outset black;
+  }
+}
+
+.react-player {
+  background-color: darkgrey;
+}

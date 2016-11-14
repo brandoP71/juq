@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styles from './styles.css';
+import styles from './styles/styles.css';
 import $ from 'jquery';
 
 var Firebase = require('firebase');
@@ -26,20 +26,24 @@ class Playlist extends Component {
     	  var listID = 'id="' + song.id + 'playlist"';
     	  listID = listID.replace(/\s+/g, '');
 	      $("#playlist").append
-	      ('<li className="songlistItem" ' + listID + '><p>Title: ' + song.title + '</p><p>Artist: ' + song.artist + '</p></li>');
-	      $("#" + song.id + "playlist").click(function() {
-	        thisComponent.state.selectedSong = song;
-	        thisComponent.state.currentSong = song;
-	        thisComponent.setState({
-	          selectedSong: thisComponent.state.selectedSong
-	        });
-	        $("#" + song.id + "playlist").css("background-color", "red");
-	        console.log(thisComponent.state.selectedSong);
-	      });
+	      ('<li ' + listID + '><p id="title' + song.id + '" style="margin-left:10px;">'
+         + song.title + ' - <b>' + song.artist + '</b></p><div><p id="cancel' + song.id + '">[CANCEL]</p></div></li>');
+
+        $("#cancel" + song.id).click(function() {
+          thisComponent.state.selectedSong = song;
+          thisComponent.state.currentSong = song;
+          thisComponent.setState({
+            selectedSong: thisComponent.state.selectedSong
+          });
+          thisComponent.removeFromPlaylist();
+        });
     });
     if (this.props.playlist.length > 0) {
-    	$("#" + this.props.playlist[0].id + "playlist").append("<p style='color:red'><b>CURRENTLY LOADED</b></p>");
-	}
+      $("#" + this.props.playlist[0].id + "playlist").prepend("<h1><b><i>Currently Loaded</i></b></h1>");
+    }
+    if (this.props.playlist.length > 1) {
+      $("#" + this.props.playlist[1].id + "playlist").prepend("<h1><b><i>Coming Up</i></b></h1>");
+    }
   }
 
   componentWillUpdate() {
@@ -56,22 +60,10 @@ class Playlist extends Component {
   
   render() {
     return (
-      <div className={styles.playlistContainer}>
-        <h1>The Playlist</h1>
-        <div className={styles.controlButtons}>
-          <ul>
-            <li>
-                <button onClick={this.removeFromPlaylist.bind(this)}>Remove Song</button>
-            </li>
-          </ul>
+      <div className={styles.playlist}>
+        <ul id="playlist">
 
-        </div>
-
-        <div className={styles.songlist}>
-          <ol id="playlist">
-
-          </ol>
-        </div>
+        </ul>
       </div>
     )
   }

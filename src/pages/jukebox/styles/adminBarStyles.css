@@ -1,0 +1,63 @@
+.adminBarContainer {
+	position: fixed;
+	top: 0;
+	right: -100px;
+	height: 100%;
+	width: 100px;
+	background-color: darkred;
+	border-radius: 2px;
+	border-left: 2px solid black;
+	transition: 1s ease-in-out;
+}
+.adminBarContainer:hover {
+	transform: translate(-100px);
+	.tab {
+		opacity: 0;
+	}
+}
+
+.tab {
+	position: absolute;
+	border-left: 3px solid darkred;
+	left: -52px;
+	top: 30px;
+	width: 49px;
+	height: 135px;
+	background-color: black;
+	border-radius: 5px 0px 0px 5px;
+	writing-mode: vertical-rl;
+	color: white;
+	text-align: center;
+	line-height: 50px;
+	transition: opacity 1s;
+	p {
+		transform: rotate(180deg);
+		font-size: 22px;
+		letter-spacing: 5px;
+		font-weight: bold;
+	}
+}
+
+.closeButton {
+	width: 102px;
+	height: 105px;
+	border: 3px solid black;
+	text-align: center;
+	color: black;
+	font-weight: bold;
+	font-size: 20px;
+	cursor: pointer;
+	margin-left: -2px;
+	.test {
+		transition: font-size 1s;
+		font-size: 16px;
+	}
+}
+.closeButton:hover {
+	background-color: black;
+	color: white;
+	.test {
+		font-size: 22px;
+		color: darkred;
+	}
+}

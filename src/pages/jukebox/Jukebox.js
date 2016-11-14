@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import styles from './styles.css';
 import ReactPlayer from 'react-player';
 
-import './defaults.scss';
-import './App.scss';
-import './Range.scss';
+import './styles/App.scss';
 
 // Firebase
 //var Rebase = require('re-base');
@@ -68,11 +65,9 @@ export default class Jukebox extends Component {
     const {
       url, playing
     } = this.state;
-    var carltonPath = require('../../../assets/carlton2.gif');
 
     return (
       <div className='app'>
-        <section className='section'>
           <h1>ReactPlayer</h1>
           <ReactPlayer
             ref='player'
@@ -89,12 +84,6 @@ export default class Jukebox extends Component {
             //onBuffer={}
             onEnded={this.nextSong.bind(this)}
           />
-        </section>
-        <div className='carltonSection'>
-          <img src={carltonPath} alt="Not Found" title="Not Found" />
-        </div>
-        <footer className='footer'>
-        </footer>
       </div>
     )
   }

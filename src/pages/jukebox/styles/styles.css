@@ -1,0 +1,116 @@
+.flexContainer {
+	display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+}
+
+.jbContainer {
+	flex: 1;
+	order: 1;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.jbPlayer {
+	flex: 0.1;
+	order: 1;
+}
+
+.jbPlaylist {
+	flex: 0.5;
+	order: 2;
+}
+
+.unusedContainer {
+	margin-top: 1%;
+	flex: 1;
+	order: 2;
+	justify-content: center;
+	text-align: center;
+}
+
+.recentContainer {
+	margin-top: 2%;
+	flex: 1;
+	order: 3;
+	justify-content: flex-start;
+}
+
+.playlist {
+	width: 375px;
+	ul {
+		list-style: none;
+		h1 {
+			font-size: 20px;
+		}
+		li {
+			font-size: 18px;
+			div {
+				margin-top: -8px;
+				margin-left: 10px;
+				font-size: 0px;
+				transition: font-size 0.5s;
+				p:hover {
+					font-weight: bolder;
+					color: darkred;
+				}
+			}
+		}
+		li:hover {
+			cursor: pointer;
+			margin-bottom: -10px;
+			P {
+				color: darkred;
+			}
+		}
+		li:hover div {
+			font-size: 18px;
+		}
+	}
+}
+
+.songlist {
+	h2 {
+		margin-left: 10px;
+	}
+	ul {
+		list-style: none;
+		li {
+			font-size: 16px;
+			transition: font-size 0.5s;
+			margin: 0 20px 0 0;
+			float: left;
+			border-left: 2px solid black;
+			cursor: pointer;
+			p {
+				margin-left: 10px;
+			}
+			div {
+				margin-bottom: 5px;
+				width: 0%;
+				font-size: 0px;
+				transition: width 1s;
+				transition: font-size 0.5s;
+				span {
+					color: darkred;
+				}
+				span:hover {
+					font-weight: bold;
+				}
+			}
+		}
+		li:hover {
+			font-size: 18px;
+		}
+		li:hover div {
+			font-size: 16px;
+			width: 100%;
+		}
+	}
+}
+
+.exitBttn {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}

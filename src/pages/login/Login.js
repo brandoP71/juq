@@ -28,6 +28,7 @@ class Login extends React.Component {
 	         passwort = object.passwort;
 
 			if (passwordField === passwort) {
+				window.sessionStorage.setItem("pass",passwort);
 				thisComponent.history.pushState(null, '/jukebox/' + jbName);
 			}
 			else {
@@ -62,6 +63,7 @@ class Login extends React.Component {
 	         passwort = object.guestPasswort;
 
 			if (guestPasswordField === passwort) {
+				window.sessionStorage.setItem("pass",passwort);
 				thisComponent.history.pushState(null, '/userPage/' + thisComponent.props.params.jukeboxID);
 			}
 			else {

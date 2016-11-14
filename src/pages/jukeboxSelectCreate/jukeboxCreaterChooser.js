@@ -3,6 +3,7 @@ import { History } from 'react-router';
 import reactMixin from 'react-mixin';
 import styles from './style.css';
 import $ from 'jquery';
+import base from '../../shared/components/Base';
 
 var Firebase = require('firebase');
 
@@ -16,6 +17,7 @@ class jukeboxCreatorChooser extends Component {
   }
 
   componentDidMount() {
+
     var thisComponent = this;
 
     var dbRef = new Firebase(
